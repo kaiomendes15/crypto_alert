@@ -78,27 +78,41 @@ crypto_alert/
 
 ---
 
-## Current State (updated as milestones complete)
+## Milestones
 
-| Milestone | Status |
-|---|---|
-| M0 — Project scaffold | ✅ Done |
-| M1 — DB models | ⬜ Pending |
-| M2 — Auth endpoints | ⬜ Pending |
-| M3 — CoinGecko proxy | ⬜ Pending |
-| M4 — Watchlist CRUD | ⬜ Pending |
-| M5 — Scheduler + publisher | ⬜ Pending |
-| M6 — Worker + email | ⬜ Pending |
-| M7 — Alert CRUD | ⬜ Pending |
-| M8 — Frontend scaffold + auth | ⬜ Pending |
-| M9 — Frontend dashboard | ⬜ Pending |
-| M10 — Frontend watchlist | ⬜ Pending |
-| M11 — Frontend alerts + history | ⬜ Pending |
-| M12 — Cloud accounts | ⬜ Pending |
-| M13 — Deploy to Render | ⬜ Pending |
-| M14 — Deploy to Vercel + smoke test | ⬜ Pending |
+Full details for each milestone live in `docs/M<N>-*.md`. Update the Status column as work completes.
 
-Milestone details live in `docs/M<N>-*.md`.
+| ID | Goal | Owner | Day | Blocked by | Blocks | Integration | Status |
+|---|---|---|---|---|---|---|---|
+| M0 | Project scaffold: folders, configs, Docker Compose, requirements | Person A | May 29 | — | M1, M2, M3 | — | ✅ Done |
+| M1 | SQLAlchemy async models + DB engine | Person A | May 29 | M0 | M2, M3, M4, M5, M7 | — | ⬜ Pending |
+| M2 | JWT auth endpoints (register + login) | Person B | May 29 | M1 | M4, M7, M8 | — | ⬜ Pending |
+| M3 | CoinGecko proxy + 60s TTL cache | Person C | May 29 | M0 | M5, M9 | **REST** | ⬜ Pending |
+| M12 | Cloud accounts + env vars provisioned | Person A | May 29 | — | M13, M14 | — | ⬜ Pending |
+| M4 | Watchlist CRUD endpoints | Person B | May 30 | M1, M2 | M5, M10 | — | ⬜ Pending |
+| M5 | Scheduler + alert evaluator + RabbitMQ publish | Person A | May 30 | M1, M3, M4 | M6 | **Messaging** | ⬜ Pending |
+| M6 | RabbitMQ worker + Resend email | Person C | May 30 | M12 | M11, M13 | **Pub/Sub** | ⬜ Pending |
+| M7 | Alert rule CRUD + history endpoint | Person B | May 30 | M1, M2 | M11 | — | ⬜ Pending |
+| M8 | Frontend scaffold + auth pages | Person C | May 31 | M2 | M9, M10, M11 | — | ⬜ Pending |
+| M9 | Frontend dashboard (live prices) | Person A | May 31 | M8, M3 | M14 | — | ⬜ Pending |
+| M10 | Frontend watchlist page | Person B | May 31 | M8, M4 | M14 | — | ⬜ Pending |
+| M11 | Frontend alerts + history pages | Person C | May 31 | M8, M7 | M14 | — | ⬜ Pending |
+| M13 | Deploy API + Worker to Render | Person A | June 1 | All backend + M12 | M14 | — | ⬜ Pending |
+| M14 | Deploy frontend to Vercel + smoke test | Person B | June 1 | M13, M8–M11 | — | — | ⬜ Pending |
+
+### Dependency Graph
+
+```
+M0 ──► M1 ──┬──► M2 ──┬──► M4 ──► M5 ──► M6
+             │         └──► M7           ↑
+             └──► M3 ──────────────────►─┘
+M12 ──────────────────────────────────────► M13 ──► M14
+M2 ──► M8 ──┬──► M9  ──► M14
+             ├──► M10 ──► M14
+             └──► M11 ──► M14
+```
+
+**Highest-risk milestone: M5** — combines APScheduler, async SQLAlchemy sessions, and aio-pika in one job. Write `test_publish.py` first to verify CloudAMQP connection in isolation before wiring into the scheduler.
 
 ---
 
