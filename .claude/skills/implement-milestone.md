@@ -1,3 +1,8 @@
+---
+name: implement-milestone
+description: Implement a project milestone end-to-end given its ID (e.g. M1, M3)
+---
+
 # implement-milestone
 
 Implement a project milestone end-to-end.
