@@ -10,10 +10,10 @@
 
 ## Acceptance Criteria
 
-- [ ] `GET /coins/markets` returns `[{id, symbol, name, current_price, price_change_percentage_24h, image}]`
-- [ ] Optional `?ids=bitcoin,ethereum` filters by coin IDs
-- [ ] Module-level `dict` + `datetime` TTL cache prevents duplicate CoinGecko calls within 60 s
-- [ ] CoinGecko 429 → our API returns 503 with `"retry in 60s"` message
+- [x] `GET /coins/markets` returns `[{id, symbol, name, current_price, price_change_percentage_24h, image}]`
+- [x] Optional `?ids=bitcoin,ethereum` filters by coin IDs
+- [x] Module-level `dict` + `datetime` TTL cache prevents duplicate CoinGecko calls within 60 s
+- [x] CoinGecko 429 → our API returns 503 with `"retry in 60s"` message
 - [ ] Endpoint visible in Swagger UI; cache-hit response time < 200 ms
 
 ## Key Files

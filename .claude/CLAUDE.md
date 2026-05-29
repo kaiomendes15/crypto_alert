@@ -85,9 +85,9 @@ Full details for each milestone live in `docs/M<N>-*.md`. Update the Status colu
 | ID | Goal | Owner | Day | Blocked by | Blocks | Integration | Status |
 |---|---|---|---|---|---|---|---|
 | M0 | Project scaffold: folders, configs, Docker Compose, requirements | Person A | May 29 | — | M1, M2, M3 | — | ✅ Done |
-| M1 | SQLAlchemy async models + DB engine | Person A | May 29 | M0 | M2, M3, M4, M5, M7 | — | ⬜ Pending |
-| M2 | JWT auth endpoints (register + login) | Person B | May 29 | M1 | M4, M7, M8 | — | ⬜ Pending |
-| M3 | CoinGecko proxy + 60s TTL cache | Person C | May 29 | M0 | M5, M9 | **REST** | ⬜ Pending |
+| M1 | SQLAlchemy async models + DB engine | Person A | May 29 | M0 | M2, M3, M4, M5, M7 | — | ✅ Done |
+| M2 | JWT auth endpoints (register + login) | Person B | May 29 | M1 | M4, M7, M8 | — | ✅ Done |
+| M3 | CoinGecko proxy + 60s TTL cache | Person C | May 29 | M0 | M5, M9 | **REST** | ✅ Done |
 | M12 | Cloud accounts + env vars provisioned | Person A | May 29 | — | M13, M14 | — | ⬜ Pending |
 | M4 | Watchlist CRUD endpoints | Person B | May 30 | M1, M2 | M5, M10 | — | ⬜ Pending |
 | M5 | Scheduler + alert evaluator + RabbitMQ publish | Person A | May 30 | M1, M3, M4 | M6 | **Messaging** | ⬜ Pending |

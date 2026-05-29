@@ -8,11 +8,11 @@ Working `POST /auth/register` and `POST /auth/login` returning a signed JWT, plu
 
 ## Acceptance Criteria
 
-- [ ] `POST /auth/register` → 201 `{id, email}`; duplicate email → 409
-- [ ] `POST /auth/login` → `{access_token, token_type: "bearer"}`; wrong password → 401
-- [ ] `Authorization: Bearer <token>` on protected routes resolves to `User` ORM object via `get_current_user`
-- [ ] Passwords hashed with `bcrypt`
-- [ ] JWT signed with `JWT_SECRET` from config; `sub` claim holds `user.id` as string
+- [x] `POST /auth/register` → 201 `{id, email}`; duplicate email → 409
+- [x] `POST /auth/login` → `{access_token, token_type: "bearer"}`; wrong password → 401
+- [x] `Authorization: Bearer <token>` on protected routes resolves to `User` ORM object via `get_current_user`
+- [x] Passwords hashed with `bcrypt`
+- [x] JWT signed with `JWT_SECRET` from config; `sub` claim holds `user.id` as string
 
 ## Key Files
 

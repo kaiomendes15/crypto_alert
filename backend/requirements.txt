@@ -3,6 +3,7 @@ uvicorn[standard]
 sqlalchemy[asyncio]
 asyncpg
 pydantic-settings
+pydantic[email]
 pyjwt
 bcrypt
 httpx
