@@ -8,11 +8,11 @@ Define all four SQLAlchemy async models and wire up the async engine so every su
 
 ## Acceptance Criteria
 
-- [ ] `User`, `WatchlistItem`, `Alert`, `AlertHistory` tables created in local Postgres on app startup
-- [ ] `AsyncSession` factory (`async_sessionmaker`) importable from `app/db/base.py`
-- [ ] FK constraints: `WatchlistItem.user_id → User.id`, `Alert.user_id → User.id`, `AlertHistory.alert_id → Alert.id`, `AlertHistory.user_id → User.id`
-- [ ] `Alert.condition` is a Python `Enum` with values: `price_above`, `price_below`, `change_above`, `change_below`
-- [ ] `create_tables()` called in FastAPI `lifespan`
+- [x] `User`, `WatchlistItem`, `Alert`, `AlertHistory` tables created in local Postgres on app startup
+- [x] `AsyncSession` factory (`async_sessionmaker`) importable from `app/db/base.py`
+- [x] FK constraints: `WatchlistItem.user_id → User.id`, `Alert.user_id → User.id`, `AlertHistory.alert_id → Alert.id`, `AlertHistory.user_id → User.id`
+- [x] `Alert.condition` is a Python `Enum` with values: `price_above`, `price_below`, `change_above`, `change_below`
+- [x] `create_tables()` called in FastAPI `lifespan`
 
 ## Key Files
 
