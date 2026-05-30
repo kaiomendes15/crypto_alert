@@ -8,10 +8,10 @@ Authenticated endpoints to create and manage alert rules, and to retrieve the hi
 
 ## Acceptance Criteria
 
-- [ ] `POST /alerts {coin_id, coin_name, condition, threshold}` → 201; validates `condition` is a known enum value
-- [ ] `GET /alerts` → list of all alerts for the user (active + inactive)
-- [ ] `DELETE /alerts/{id}` → 204; 404 if not found or not owned by current user
-- [ ] `GET /alerts/history` → paginated list of `AlertHistory` rows, newest first; supports `?limit=50&offset=0`
+- [x] `POST /alerts {coin_id, coin_name, condition, threshold}` → 201; validates `condition` is a known enum value
+- [x] `GET /alerts` → list of all alerts for the user (active + inactive)
+- [x] `DELETE /alerts/{id}` → 204; 404 if not found or not owned by current user
+- [x] `GET /alerts/history` → paginated list of `AlertHistory` rows, newest first; supports `?limit=50&offset=0`
 
 ## Key Files
 
