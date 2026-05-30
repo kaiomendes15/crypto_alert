@@ -3,15 +3,40 @@
   min-height: 100svh;
   display: grid;
   place-items: center;
+}
+
+.auth-screen {
+  position: relative;
+  place-items: stretch;
+  overflow: hidden;
+}
+
+.auth-screen::before {
+  content: '';
+  position: fixed;
+  left: -23vw;
+  bottom: -16vh;
+  z-index: 0;
+  width: clamp(720px, 68vw, 1040px);
+  aspect-ratio: 1024 / 562;
+  background: url('./assets/icone.jpeg') center / contain no-repeat;
+  opacity: 0.26;
+  filter: saturate(1.25) contrast(1.08);
+  pointer-events: none;
+}
+
+.dashboard-shell {
   padding: 40px;
 }
 
 .auth-layout {
-  width: min(100%, 1040px);
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 100svh;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
-  border: 1px solid var(--border);
-  background: var(--panel);
+  grid-template-columns: minmax(0, 1fr) minmax(390px, 460px);
+  background: rgba(5, 8, 6, 0.74);
 }
 
 .auth-panel,
@@ -24,7 +49,9 @@
 .auth-panel {
   display: grid;
   width: 100%;
+  align-content: center;
   border-width: 0 0 0 1px;
+  background: rgba(11, 15, 12, 0.96);
 }
 
 .auth-copy,
@@ -40,20 +67,20 @@
 
 .product-panel {
   position: relative;
-  min-height: 620px;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 40px;
+  padding: 56px;
   overflow: hidden;
 }
 
 .product-panel::before {
   content: '';
   position: absolute;
-  inset: 24px 24px auto auto;
-  width: 156px;
-  height: 156px;
+  inset: 40px 40px auto auto;
+  width: 180px;
+  height: 180px;
   border: 1px solid var(--accent);
   background:
     linear-gradient(90deg, transparent 49%, rgba(0, 230, 118, 0.42) 50%, transparent 51%),
@@ -85,10 +112,10 @@ h1 {
 }
 
 h2 {
-  max-width: 560px;
+  max-width: 640px;
   margin: 0 0 18px;
   color: var(--text-strong);
-  font-size: 52px;
+  font-size: 64px;
   line-height: 0.95;
   letter-spacing: 0;
 }
@@ -217,13 +244,24 @@ a:focus-visible {
 }
 
 @media (max-width: 860px) {
-  .auth-screen,
   .dashboard-shell {
     padding: 18px;
   }
 
+  .auth-screen {
+    overflow: auto;
+  }
+
+  .auth-screen::before {
+    left: -18vw;
+    bottom: 2vh;
+    width: min(88vw, 460px);
+    opacity: 0.2;
+  }
+
   .auth-layout {
     grid-template-columns: 1fr;
+    min-height: 100svh;
   }
 
   .auth-panel {
