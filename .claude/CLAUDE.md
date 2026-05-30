@@ -218,6 +218,13 @@ AlertHistory     id, alert_id → Alert, user_id → User, coin_id, coin_name, c
 
 - **No Celery** — scheduler is an `asyncio` loop inside FastAPI `lifespan`
 - **One-shot alerts** — deactivated on first trigger; user can re-enable
+
+## Frontend Visual Identity
+
+- Use the `frontend-design` skill for frontend implementation and restyling.
+- CryptoAlert uses an Industrial identity: black surfaces, monospaced typography, flat 1px borders, tabular numerics, and no decorative shadows.
+- The application palette is black plus money-green, inspired by Green Lantern energy without using branded copy or assets: primary green `#00e676`, strong green `#2dff8f`, background `#050806`, panel `#0b0f0c`, border `#193823`, text `#9fb4a7`, strong text `#f0fff5`.
+- Keep this palette as the default for future frontend milestones M9-M11 unless the team explicitly changes the product identity.
 - **Batch CoinGecko calls** — all monitored coins in one `/coins/markets` call; never one per coin
 - **Worker is a separate process** — deployed independently on Render; no shared state with API
 - **No WebSockets** — frontend polls endpoints; simpler scope
