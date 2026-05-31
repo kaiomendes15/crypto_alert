@@ -13,7 +13,9 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     poll_interval_seconds: int = 120
     coingecko_base_url: str = "https://api.coingecko.com/api/v3"
-    alert_queue_name: str = "alerts"
+    alert_queue_name: str = "price_alerts_queue"
+    alert_exchange_name: str = "alerts_exchange"
+    alert_routing_key: str = "alert.triggered"
 
     @field_validator("jwt_secret")
     @classmethod

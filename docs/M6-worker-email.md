@@ -10,9 +10,9 @@ Standalone Python process subscribes to RabbitMQ and sends a transactional email
 
 ## Acceptance Criteria
 
-- [ ] Worker starts with `python -m worker.main` and logs `"Waiting for messages on queue: price_alerts"`
-- [ ] On each message: parses JSON, calls `resend.Emails.send(...)` with HTML body (coin name, condition, threshold, triggered price, timestamp)
-- [ ] Acks on success; nacks with `requeue=False` on failure
+- [x] Worker starts with `python -m worker.main` and logs `"Waiting for messages on queue: price_alerts"`
+- [x] On each message: parses JSON, calls `resend.Emails.send(...)` with HTML body (coin name, condition, threshold, triggered price, timestamp)
+- [x] Acks on success; nacks with `requeue=False` on failure
 - [ ] Email arrives in the test inbox during local demo
 
 ## Key Files

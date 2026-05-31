@@ -12,7 +12,7 @@ All four external services provisioned and credentials stored in `.env` locally,
 - [ ] **Render Postgres** — free DB created → `DATABASE_URL` (asyncpg format) in `.env`
 - [ ] **Resend** — account created, sending domain verified, API key → `RESEND_API_KEY` + `RESEND_FROM_EMAIL` in `.env`
 - [ ] **Vercel** — project created, linked to repo, Root Directory set to `frontend/`
-- [ ] `.env.example` committed listing all required keys (no values)
+- [x] `.env.example` committed listing all required keys (no values)
 
 ## Services to Provision
 

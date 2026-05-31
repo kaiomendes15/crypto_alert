@@ -91,7 +91,7 @@ Full details for each milestone live in `docs/M<N>-*.md`. Update the Status colu
 | M12 | Cloud accounts + env vars provisioned | Person A | May 29 | — | M13, M14 | — | ⬜ Pending |
 | M4 | Watchlist CRUD endpoints | Person B | May 30 | M1, M2 | M5, M10 | — | ⬜ Pending |
 | M5 | Scheduler + alert evaluator + RabbitMQ publish | Person A | May 30 | M1, M3, M4 | M6 | **Messaging** | ⬜ Pending |
-| M6 | RabbitMQ worker + Resend email | Person C | May 30 | M12 | M11, M13 | **Pub/Sub** | ⬜ Pending |
+| M6 | RabbitMQ worker + Resend email | Person C | May 30 | M12 | M11, M13 | **Pub/Sub** | ✅ Done |
 | M7 | Alert rule CRUD + history endpoint | Person B | May 30 | M1, M2 | M11 | — | ⬜ Pending |
 | M8 | Frontend scaffold + auth pages | Person C | May 31 | M2 | M9, M10, M11 | — | ⬜ Pending |
 | M9 | Frontend dashboard (live prices) | Person A | May 31 | M8, M3 | M14 | — | ⬜ Pending |
