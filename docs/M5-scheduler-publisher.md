@@ -10,12 +10,12 @@ APScheduler job runs every 120 s inside FastAPI's lifespan, fetches prices for a
 
 ## Acceptance Criteria
 
-- [ ] Scheduler starts in `lifespan` and logs `"Scheduler started"`
-- [ ] Each run: one DB query to get distinct `coin_id`s from `WatchlistItem`; one CoinGecko call (cache hit path from M3)
-- [ ] For each `Alert` where `is_active=True`: evaluate condition; on match → set `is_active=False`, write `AlertHistory` row, publish message — all in one DB transaction before publish
-- [ ] Published message JSON: `{alert_id, user_email, coin_id, coin_name, condition, threshold, triggered_price, change_24h, triggered_at}`
-- [ ] Log: `"Published alert {alert_id} to RabbitMQ"` on each publish
-- [ ] No alert fires twice (deactivated on first trigger)
+- [x] Scheduler starts in `lifespan` and logs `"Scheduler started"`
+- [x] Each run: one DB query to get distinct `coin_id`s from `WatchlistItem`; one CoinGecko call (cache hit path from M3)
+- [x] For each `Alert` where `is_active=True`: evaluate condition; on match → set `is_active=False`, write `AlertHistory` row, publish message — all in one DB transaction before publish
+- [x] Published message JSON: `{alert_id, user_email, coin_id, coin_name, condition, threshold, triggered_price, change_24h, triggered_at}`
+- [x] Log: `"Published alert {alert_id} to RabbitMQ"` on each publish
+- [x] No alert fires twice (deactivated on first trigger)
 
 ## Key Files
 

@@ -8,11 +8,11 @@ All four external services provisioned and credentials stored in `.env` locally,
 
 ## Acceptance Criteria
 
-- [ ] **CloudAMQP** — "Little Lemur" free instance created → `RABBITMQ_URL` in `.env`
-- [ ] **Render Postgres** — free DB created → `DATABASE_URL` (asyncpg format) in `.env`
-- [ ] **Resend** — account created, sending domain verified, API key → `RESEND_API_KEY` + `RESEND_FROM_EMAIL` in `.env`
+- [x] **CloudAMQP** — "Little Lemur" free instance created → `RABBITMQ_URL` in `.env`
+- [ ] **Render Postgres** — free DB created → `DATABASE_URL` (asyncpg format) in `.env` _(still pointing at local Docker Postgres)_
+- [ ] **Resend** — account created, sending domain verified, API key → `RESEND_API_KEY` + `RESEND_FROM_EMAIL` in `.env` _(account + API key done; sending domain NOT verified — using sandbox `onboarding@resend.dev`, which only delivers to the account owner)_
 - [ ] **Vercel** — project created, linked to repo, Root Directory set to `frontend/`
-- [ ] `.env.example` committed listing all required keys (no values)
+- [x] `.env.example` committed listing all required keys (no values)
 
 ## Services to Provision
 

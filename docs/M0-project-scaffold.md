@@ -8,15 +8,15 @@ Create the full folder structure, install tooling, wire up FastAPI app skeleton,
 
 ## Acceptance Criteria
 
-- [ ] `docker-compose.yml` at repo root starts Postgres 16 on port 5432 with `cryptoalert` user/db/pass
-- [ ] `backend/app/main.py` — FastAPI app with `/health` route returning `{"status": "ok"}`
-- [ ] `backend/app/core/config.py` — pydantic-settings `Settings` class loading all env vars
-- [ ] `backend/requirements.txt` — all dependencies listed
-- [ ] `backend/.env.example` — all required keys listed (no values)
-- [ ] `frontend/` initialized with Vite React template; `npm install` passes
-- [ ] `uvicorn app.main:app --reload` starts without errors
-- [ ] `.env` created locally from `.env.example` (not committed)
-- [ ] `README.md` documents `docker compose up -d`, backend, and frontend start commands
+- [x] `docker-compose.yml` at repo root starts Postgres 16 on port 5432 with `cryptoalert` user/db/pass
+- [x] `backend/app/main.py` — FastAPI app with `/health` route returning `{"status": "ok"}`
+- [x] `backend/app/core/config.py` — pydantic-settings `Settings` class loading all env vars
+- [x] `backend/requirements.txt` — all dependencies listed
+- [x] `backend/.env.example` — all required keys listed (no values)
+- [x] `frontend/` initialized with Vite React template; `npm install` passes
+- [x] `uvicorn app.main:app --reload` starts without errors
+- [x] `.env` created locally from `.env.example` (not committed)
+- [x] `README.md` documents `docker compose up -d`, backend, and frontend start commands
 
 ## Key Files
 

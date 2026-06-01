@@ -8,10 +8,10 @@ Page where users search for coins and add/remove them from their watchlist.
 
 ## Acceptance Criteria
 
-- [ ] Search input filters the full coin list (from `GET /coins/markets`) client-side — no extra API call per keystroke
-- [ ] Coins already in watchlist show "Remove" button; others show "Add" button
-- [ ] "Add" calls `POST /watchlist`; "Remove" calls `DELETE /watchlist/{coin_id}`
-- [ ] UI updates immediately after add/remove (optimistic update or re-fetch)
+- [x] Search input filters the full coin list (from `GET /coins/markets`) client-side — no extra API call per keystroke
+- [x] Coins already in watchlist show "Remove" button; others show "Add" button
+- [x] "Add" calls `POST /watchlist`; "Remove" calls `DELETE /watchlist/{coin_id}`
+- [x] UI updates immediately after add/remove (optimistic update or re-fetch)
 
 ## Key Files
 
