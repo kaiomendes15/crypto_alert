@@ -150,6 +150,9 @@ function Watchlist() {
             <Link className="secondary-button nav-link" to="/dashboard">
               Dashboard
             </Link>
+            <Link className="secondary-button nav-link" to="/alerts">
+              Alerts
+            </Link>
             <button type="button" className="secondary-button" onClick={handleSignOut}>
               Sign out
             </button>

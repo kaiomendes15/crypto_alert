@@ -158,6 +158,9 @@ function Dashboard() {
             <Link className="secondary-button nav-link" to="/watchlist">
               Watchlist
             </Link>
+            <Link className="secondary-button nav-link" to="/alerts">
+              Alerts
+            </Link>
             <button type="button" className="secondary-button" onClick={handleSignOut}>
               Sign out
             </button>
