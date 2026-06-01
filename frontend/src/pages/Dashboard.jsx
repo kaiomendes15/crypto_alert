@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import api from '../api'
+import SignOutButton from '../components/SignOutButton'
 
 const POLL_INTERVAL_MS = 30000
 const VISIBLE_COINS = 20
@@ -161,9 +162,7 @@ function Dashboard() {
             <Link className="secondary-button nav-link" to="/alerts">
               Alerts
             </Link>
-            <button type="button" className="secondary-button" onClick={handleSignOut}>
-              Sign out
-            </button>
+            <SignOutButton onClick={handleSignOut} />
           </div>
         </header>
 

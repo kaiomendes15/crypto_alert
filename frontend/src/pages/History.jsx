@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import api from '../api'
+import SignOutButton from '../components/SignOutButton'
 
 const POLL_INTERVAL_MS = 30000
 
@@ -93,15 +94,16 @@ function History() {
             <p>Triggered alerts are listed newest first and refresh every 30 seconds.</p>
           </div>
           <div className="dashboard-actions">
+            <span className={isRefreshing ? 'refresh-status is-active' : 'refresh-status'}>
+              {isRefreshing ? 'Refreshing' : 'Polling every 30s'}
+            </span>
             <Link className="secondary-button nav-link" to="/dashboard">
               Dashboard
             </Link>
             <Link className="secondary-button nav-link" to="/alerts">
               Alerts
             </Link>
-            <button type="button" className="secondary-button" onClick={handleSignOut}>
-              Sign out
-            </button>
+            <SignOutButton onClick={handleSignOut} />
           </div>
         </header>
 

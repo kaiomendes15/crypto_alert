@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import api from '../api'
+import SignOutButton from '../components/SignOutButton'
 
 const CONDITIONS = [
   { value: 'price_above', label: 'Price above' },
@@ -221,9 +222,7 @@ function Alerts() {
             <Link className="secondary-button nav-link" to="/history">
               History
             </Link>
-            <button type="button" className="secondary-button" onClick={handleSignOut}>
-              Sign out
-            </button>
+            <SignOutButton onClick={handleSignOut} />
           </div>
         </header>
 
