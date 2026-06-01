@@ -11,5 +11,15 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: cryptoalert
+      RABBITMQ_DEFAULT_PASS: cryptoalert
+    ports:
+      - "5672:5672"    # AMQP
+      - "15672:15672"  # Management UI
+
 volumes:
   pgdata:
