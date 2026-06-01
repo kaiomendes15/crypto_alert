@@ -8,6 +8,8 @@ async def main() -> None:
     await publish_alert_event(
         {
             "alert_id": "00000000-0000-0000-0000-000000000000",
+            # NOTE: with RESEND_FROM_EMAIL=onboarding@resend.dev, Resend only delivers to
+            # the Resend account owner's address. Use that email here, or it will 403.
             "user_email": "saulobdsena@gmail.com",
             "coin_id": "bitcoin",
             "coin_name": "Bitcoin",

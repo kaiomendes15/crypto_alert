@@ -1,15 +1,19 @@
 import asyncio
-import json
 import logging
-import os
 import sys
+import uuid
 from typing import Any
 
 import aio_pika
+import json
 import resend
-from dotenv import load_dotenv
+from aio_pika import ExchangeType
+from sqlalchemy import update
 
-load_dotenv()
+from app.core.config import settings
+from app.core.messaging import EXCHANGE_NAME, QUEUE_NAME, ROUTING_KEY
+from app.db.base import async_session
+from app.db.models import AlertHistory
 
 logging.basicConfig(
     level=logging.INFO,
@@ -17,12 +21,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-RABBITMQ_URL = os.environ["RABBITMQ_URL"]
-RESEND_API_KEY = os.environ["RESEND_API_KEY"]
-RESEND_FROM_EMAIL = os.environ["RESEND_FROM_EMAIL"]
-QUEUE_NAME = os.getenv("ALERT_QUEUE_NAME", "alerts")
-
-resend.api_key = RESEND_API_KEY
+resend.api_key = settings.resend_api_key
 
 CONDITION_LABELS = {
     "price_above": "rose above",
@@ -103,6 +102,21 @@ def _build_email(data: dict[str, Any]) -> tuple[str, str]:
     return subject, html
 
 
+async def _mark_email_sent(history_id: str) -> None:
+    """Best-effort flag flip after a successful send. The email already went out, so a
+    failure here is logged but never re-sends or re-queues the message."""
+    try:
+        async with async_session() as session:
+            await session.execute(
+                update(AlertHistory)
+                .where(AlertHistory.id == uuid.UUID(history_id))
+                .values(email_sent=True)
+            )
+            await session.commit()
+    except Exception as exc:
+        logger.warning("Email sent but could not mark history %s as sent: %s", history_id, exc)
+
+
 async def _process_message(message: aio_pika.IncomingMessage) -> None:
     try:
         data = json.loads(message.body)
@@ -123,28 +137,49 @@ async def _process_message(message: aio_pika.IncomingMessage) -> None:
     subject, html = _build_email(data)
 
     try:
-        resend.Emails.send({
-            "from": RESEND_FROM_EMAIL,
-            "to": [user_email],
-            "subject": subject,
-            "html": html,
-        })
-        logger.info("Email sent for alert %s to %s", alert_id, user_email)
-        await message.ack()
+        # resend.Emails.send is a blocking HTTP call; run it off the event loop so it
+        # cannot stall aio-pika heartbeats (a stalled heartbeat drops the connection).
+        await asyncio.to_thread(
+            resend.Emails.send,
+            {
+                "from": settings.resend_from_email,
+                "to": [user_email],
+                "subject": subject,
+                "html": html,
+            },
+        )
     except Exception as exc:
         logger.error("Resend error for alert %s: %s", alert_id, exc)
         await message.nack(requeue=False)
+        return
+
+    logger.info("Email sent for alert %s to %s", alert_id, user_email)
+
+    history_id = data.get("alert_history_id")
+    if history_id:
+        await _mark_email_sent(history_id)
+
+    await message.ack()
 
 
 async def main() -> None:
+    if not settings.rabbitmq_url:
+        logger.error("RABBITMQ_URL is not configured; worker cannot start")
+        sys.exit(1)
+    if not settings.resend_api_key or not settings.resend_from_email:
+        logger.error("RESEND_API_KEY / RESEND_FROM_EMAIL not configured; worker cannot start")
+        sys.exit(1)
+
     logger.info("Connecting to RabbitMQ...")
-    connection = await aio_pika.connect_robust(RABBITMQ_URL)
+    connection = await aio_pika.connect_robust(settings.rabbitmq_url)
 
     async with connection:
         channel = await connection.channel()
         await channel.set_qos(prefetch_count=10)
 
+        exchange = await channel.declare_exchange(EXCHANGE_NAME, ExchangeType.DIRECT, durable=True)
         queue = await channel.declare_queue(QUEUE_NAME, durable=True)
+        await queue.bind(exchange, routing_key=ROUTING_KEY)
         logger.info("Waiting for messages on queue: %s", QUEUE_NAME)
 
         await queue.consume(_process_message)

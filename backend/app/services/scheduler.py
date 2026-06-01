@@ -1,4 +1,5 @@
 import logging
+import uuid
 from datetime import datetime, timezone
 from typing import Any
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -33,6 +34,7 @@ def _condition_matches(
 
 def _alert_message(
     alert: Alert,
+    history_id: uuid.UUID,
     user_email: str,
     current_price: float,
     change_24h: float | None,
@@ -40,6 +42,7 @@ def _alert_message(
 ) -> dict[str, Any]:
     return {
         "alert_id": str(alert.id),
+        "alert_history_id": str(history_id),
         "user_email": user_email,
         "coin_id": alert.coin_id,
         "coin_name": alert.coin_name,
@@ -88,9 +91,11 @@ async def check_prices() -> None:
                     continue
 
                 triggered_at = datetime.now(timezone.utc)
+                history_id = uuid.uuid4()
                 alert.is_active = False
                 session.add(
                     AlertHistory(
+                        id=history_id,
                         alert_id=alert.id,
                         user_id=alert.user_id,
                         coin_id=alert.coin_id,
@@ -103,7 +108,9 @@ async def check_prices() -> None:
                     )
                 )
                 messages.append(
-                    _alert_message(alert, user_email, current_price, change_24h, triggered_at)
+                    _alert_message(
+                        alert, history_id, user_email, current_price, change_24h, triggered_at
+                    )
                 )
 
     for message in messages:
