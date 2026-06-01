@@ -18,7 +18,7 @@ function formatCondition(value) {
   return CONDITIONS.find((condition) => condition.value === value)?.label || value
 }
 
-function parseThreshold(value) {
+function parseThreshold(value, isChangeCondition) {
   const cleaned = value.trim().replace(/[^\d,.-]/g, '')
   const lastComma = cleaned.lastIndexOf(',')
   const lastDot = cleaned.lastIndexOf('.')
@@ -39,6 +39,17 @@ function parseThreshold(value) {
       ? cleaned.replace(',', '.')
       : cleaned.replaceAll(',', '')
     return Number(normalised)
+  }
+
+  if (!isChangeCondition && lastDot !== -1) {
+    const parts = cleaned.split('.')
+    const hasOnlyThousandsGroups = parts.length > 1
+      && parts[0].length > 0
+      && parts.slice(1).every((part) => part.length === 3)
+
+    if (hasOnlyThousandsGroups) {
+      return Number(cleaned.replaceAll('.', ''))
+    }
   }
 
   return Number(cleaned)
@@ -143,7 +154,7 @@ function Alerts() {
       return
     }
 
-    const threshold = parseThreshold(form.threshold)
+    const threshold = parseThreshold(form.threshold, isChangeCondition)
     if (!Number.isFinite(threshold)) {
       setError('Enter a valid threshold value.')
       return
@@ -279,7 +290,7 @@ function Alerts() {
               name="threshold"
               type="text"
               inputMode="decimal"
-              placeholder={isChangeCondition ? '-5' : '$72,900.00'}
+              placeholder={'$72,900.00'}
               value={form.threshold}
               onChange={updateField}
               required
