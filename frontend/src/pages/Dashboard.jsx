@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import api from '../api'
 
 const POLL_INTERVAL_MS = 30000
@@ -155,6 +155,9 @@ function Dashboard() {
             <span className={isRefreshing ? 'refresh-status is-active' : 'refresh-status'}>
               {isRefreshing ? 'Refreshing' : 'Polling every 30s'}
             </span>
+            <Link className="secondary-button nav-link" to="/watchlist">
+              Watchlist
+            </Link>
             <button type="button" className="secondary-button" onClick={handleSignOut}>
               Sign out
             </button>
@@ -177,6 +180,9 @@ function Dashboard() {
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
           />
+          <button type="submit" className="secondary-button" disabled={isSearching}>
+            {isSearching ? 'Searching' : 'Search ID'}
+          </button>
           <span className="result-count">
             {isInitialLoading ? 'Loading markets' : `${visibleCoins.length} shown`}
           </span>

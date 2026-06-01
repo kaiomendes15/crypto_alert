@@ -210,13 +210,25 @@ button:disabled {
 }
 
 .secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--accent);
+  padding: 13px 16px;
+  text-decoration: none;
   background: transparent;
   color: var(--accent);
 }
 
 .secondary-button:hover,
 .secondary-button:focus-visible {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
   color: var(--button-text);
+}
+
+.nav-link {
+  font-weight: 700;
 }
 
 .form-error {
@@ -359,6 +371,24 @@ button:disabled {
 .empty-table {
   color: var(--text);
   text-align: center;
+}
+
+.table-action {
+  min-width: 92px;
+  padding: 9px 12px;
+}
+
+.remove-action {
+  border-color: var(--danger);
+  background: transparent;
+  color: var(--danger);
+}
+
+.remove-action:hover:not(:disabled),
+.remove-action:focus-visible {
+  border-color: var(--danger);
+  background: var(--danger);
+  color: var(--black);
 }
 
 .skeleton-row td {
