@@ -8,12 +8,12 @@ Vite + React 18 project wired to the API, with working Register and Login pages 
 
 ## Acceptance Criteria
 
-- [ ] `npm run dev` serves the app on `localhost:5173`
-- [ ] `/register` form POSTs to `POST /auth/register`; success → redirect to `/login`
-- [ ] `/login` form POSTs to `POST /auth/login`; success → stores token in `localStorage`, redirects to `/dashboard`
-- [ ] Invalid credentials show an inline error message (no `alert()` or `console.log`)
-- [ ] Axios instance in `src/api.js` attaches `Authorization: Bearer <token>` on every request
-- [ ] `<ProtectedRoute>` redirects to `/login` if no token in `localStorage`
+- [x] `npm run dev` serves the app on `localhost:5173`
+- [x] `/register` form POSTs to `POST /auth/register`; success → redirect to `/login`
+- [x] `/login` form POSTs to `POST /auth/login`; success → stores token in `localStorage`, redirects to `/dashboard`
+- [x] Invalid credentials show an inline error message (no `alert()` or `console.log`)
+- [x] Axios instance in `src/api.js` attaches `Authorization: Bearer <token>` on every request
+- [x] `<ProtectedRoute>` redirects to `/login` if no token in `localStorage`
 
 ## Key Files
 

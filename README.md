@@ -18,6 +18,7 @@ cp .env.example .env   # fill in your values
 uvicorn app.main:app --reload
 ```
 API runs on http://localhost:8000 — Swagger UI at http://localhost:8000/docs
+Local Postgres is exposed on `localhost:5433` by Docker Compose.
 
 ### 3. Worker (separate terminal)
 ```bash

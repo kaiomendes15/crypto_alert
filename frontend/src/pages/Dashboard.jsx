@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import api from '../api'
+import SignOutButton from '../components/SignOutButton'
 
 const POLL_INTERVAL_MS = 30000
 const VISIBLE_COINS = 20
@@ -155,9 +156,13 @@ function Dashboard() {
             <span className={isRefreshing ? 'refresh-status is-active' : 'refresh-status'}>
               {isRefreshing ? 'Refreshing' : 'Polling every 30s'}
             </span>
-            <button type="button" className="secondary-button" onClick={handleSignOut}>
-              Sign out
-            </button>
+            <Link className="secondary-button nav-link" to="/watchlist">
+              Watchlist
+            </Link>
+            <Link className="secondary-button nav-link" to="/alerts">
+              Alerts
+            </Link>
+            <SignOutButton onClick={handleSignOut} />
           </div>
         </header>
 
@@ -177,6 +182,9 @@ function Dashboard() {
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
           />
+          <button type="submit" className="secondary-button" disabled={isSearching}>
+            {isSearching ? 'Searching' : 'Search ID'}
+          </button>
           <span className="result-count">
             {isInitialLoading ? 'Loading markets' : `${visibleCoins.length} shown`}
           </span>

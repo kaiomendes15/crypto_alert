@@ -88,15 +88,15 @@ Full details for each milestone live in `docs/M<N>-*.md`. Update the Status colu
 | M1 | SQLAlchemy async models + DB engine | Person A | May 29 | M0 | M2, M3, M4, M5, M7 | — | ✅ Done |
 | M2 | JWT auth endpoints (register + login) | Person B | May 29 | M1 | M4, M7, M8 | — | ✅ Done |
 | M3 | CoinGecko proxy + 60s TTL cache | Person C | May 29 | M0 | M5, M9 | **REST** | ✅ Done |
-| M12 | Cloud accounts + env vars provisioned | Person A | May 29 | — | M13, M14 | — | ⬜ Pending |
-| M4 | Watchlist CRUD endpoints | Person B | May 30 | M1, M2 | M5, M10 | — | ⬜ Pending |
-| M5 | Scheduler + alert evaluator + RabbitMQ publish | Person A | May 30 | M1, M3, M4 | M6 | **Messaging** | ⬜ Pending |
-| M6 | RabbitMQ worker + Resend email | Person C | May 30 | M12 | M11, M13 | **Pub/Sub** | ⬜ Pending |
+| M12 | Cloud accounts + env vars provisioned | Person A | May 29 | — | M13, M14 | — | 🟡 Partial (CloudAMQP + Resend key done; Render PG, Resend domain, Vercel pending) |
+| M4 | Watchlist CRUD endpoints | Person B | May 30 | M1, M2 | M5, M10 | — | ✅ Done |
+| M5 | Scheduler + alert evaluator + RabbitMQ publish | Person A | May 30 | M1, M3, M4 | M6 | **Messaging** | ✅ Done |
+| M6 | RabbitMQ worker + Resend email | Person C | May 30 | M12 | M11, M13 | **Pub/Sub** | ✅ Done |
 | M7 | Alert rule CRUD + history endpoint | Person B | May 30 | M1, M2 | M11 | — | ✅ Done |
-| M8 | Frontend scaffold + auth pages | Person C | May 31 | M2 | M9, M10, M11 | — | ⬜ Pending |
-| M9 | Frontend dashboard (live prices) | Person A | May 31 | M8, M3 | M14 | — | ⬜ Pending |
-| M10 | Frontend watchlist page | Person B | May 31 | M8, M4 | M14 | — | ⬜ Pending |
-| M11 | Frontend alerts + history pages | Person C | May 31 | M8, M7 | M14 | — | ⬜ Pending |
+| M8 | Frontend scaffold + auth pages | Person C | May 31 | M2 | M9, M10, M11 | — | ✅ Done |
+| M9 | Frontend dashboard (live prices) | Person A | May 31 | M8, M3 | M14 | — | ✅ Done |
+| M10 | Frontend watchlist page | Person B | May 31 | M8, M4 | M14 | — | ✅ Done |
+| M11 | Frontend alerts + history pages | Person C | May 31 | M8, M7 | M14 | — | ✅ Done |
 | M13 | Deploy API + Worker to Render | Person A | June 1 | All backend + M12 | M14 | — | ⬜ Pending |
 | M14 | Deploy frontend to Vercel + smoke test | Person B | June 1 | M13, M8–M11 | — | — | ⬜ Pending |
 

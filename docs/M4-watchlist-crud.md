@@ -8,10 +8,10 @@ Authenticated endpoints to manage a user's coin watchlist. The scheduler (M5) qu
 
 ## Acceptance Criteria
 
-- [ ] `GET /watchlist` → list of `{id, coin_id, added_at}` for the authenticated user only
-- [ ] `POST /watchlist {coin_id}` → 201; duplicate coin_id → 409
-- [ ] `DELETE /watchlist/{coin_id}` → 204; coin not in list → 404
-- [ ] All endpoints require JWT; unauthenticated → 401
+- [x] `GET /watchlist` → list of `{id, coin_id, added_at}` for the authenticated user only
+- [x] `POST /watchlist {coin_id}` → 201; duplicate coin_id → 409
+- [x] `DELETE /watchlist/{coin_id}` → 204; coin not in list → 404
+- [x] All endpoints require JWT; unauthenticated → 401
 
 ## Key Files
 
