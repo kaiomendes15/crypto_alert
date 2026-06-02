@@ -32,6 +32,19 @@ def _normalise_ids(ids: str) -> str:
     return ",".join(sorted(ids.split(",")))
 
 
+def _auth_headers() -> dict[str, str]:
+    """Attach the CoinGecko API key when one is configured.
+
+    Keyless mode (empty key) keeps the public API behaviour. The Pro base URL uses a
+    different header name than the free Demo plan, so pick the right one from the base URL.
+    """
+    key = settings.coingecko_api_key
+    if not key:
+        return {}
+    header = "x-cg-pro-api-key" if "pro-api" in settings.coingecko_base_url else "x-cg-demo-api-key"
+    return {header: key}
+
+
 async def get_markets(ids: Optional[str] = None) -> list[CoinMarket]:
     global _cache, _cache_expires_at
 
@@ -50,7 +63,7 @@ async def get_markets(ids: Optional[str] = None) -> list[CoinMarket]:
     if ids:
         params["ids"] = cache_key  # use normalised form for consistent API calls
 
-    async with httpx.AsyncClient(timeout=10.0) as client:
+    async with httpx.AsyncClient(timeout=10.0, headers=_auth_headers()) as client:
         response = await client.get(f"{settings.coingecko_base_url}/coins/markets", params=params)
 
     if response.status_code == 429:

@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     poll_interval_seconds: int = 120
     coingecko_base_url: str = "https://api.coingecko.com/api/v3"
+    coingecko_api_key: str = ""  # optional CoinGecko Demo/Pro key; empty = keyless public API
 
     @field_validator("database_url")
     @classmethod
