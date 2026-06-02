@@ -11,10 +11,7 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        fromService:
-          name: crypto-alert-api
-          type: web
-          property: host
+        value: https://crypto-alert-api-sn2o.onrender.com
 
   - type: web
     name: crypto-alert-api
