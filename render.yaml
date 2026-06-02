@@ -2,8 +2,7 @@ services:
   - type: web
     name: crypto-alert-frontend
     runtime: static
-    branch: main
-    plan: free
+    branch: test/deploy
     buildCommand: cd frontend && npm ci && npm run build
     staticPublishPath: frontend/dist
     routes:
