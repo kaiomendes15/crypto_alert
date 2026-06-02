@@ -32,7 +32,7 @@ services:
           type: web
           property: host
       - key: BACKEND_CORS_ORIGIN_REGEX
-        value: https://.*\.onrender\.com
+        value: https?://.*
       - key: RABBITMQ_URL
         sync: false
       - key: RESEND_API_KEY
