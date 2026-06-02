@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     database_url: str
-    backend_cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    backend_cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173,https://crypto-alert-frontend.onrender.com"
     backend_cors_origin_regex: str | None = None
     rabbitmq_url: str = ""
     resend_api_key: str = ""
