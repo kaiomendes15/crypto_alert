@@ -1,5 +1,14 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import {
+  Activity,
+  ArrowRight,
+  BellRing,
+  Copyright,
+  Infinity as InfinityIcon,
+  LineChart,
+  ScrollText,
+} from 'lucide-react'
 
 const TICKER_COINS = [
   { symbol: 'BTC', price: '$104,230', change: '+2.41%', positive: true },
@@ -18,11 +27,28 @@ const STATS = [
   { value: '100', unit: '+', label: 'Assets tracked' },
   { value: '30', unit: 's', label: 'Price refresh' },
   { value: '4', unit: '', label: 'Alert conditions' },
-  { value: '∞', unit: '', label: 'History stored' },
+  { value: null, icon: InfinityIcon, label: 'History stored' },
+]
+
+const FEATURES = [
+  {
+    icon: LineChart,
+    title: 'Live price tracking',
+    body: 'Top 100 crypto markets pulled from CoinGecko every 30 seconds. Filter by name, symbol, or CoinGecko ID.',
+  },
+  {
+    icon: BellRing,
+    title: 'Smart alert rules',
+    body: 'Set price-above, price-below, change-above, or change-below conditions. Alerts fire once and log automatically.',
+  },
+  {
+    icon: ScrollText,
+    title: 'Alert history',
+    body: 'Every triggered alert is logged with the exact price, threshold, 24h change, and timestamp for full auditability.',
+  },
 ]
 
 // OHLC candlestick data — uptrend with realistic retracements
-// bodyBottom: px from chart bottom, bodyH: body height, wicks in px
 const CANDLES = [
   { type: 'bear', left: 0,   bodyBottom: 22,  bodyH: 42, wickTop: 12, wickBottom: 9  },
   { type: 'bull', left: 40,  bodyBottom: 40,  bodyH: 56, wickTop: 20, wickBottom: 11 },
@@ -59,10 +85,18 @@ function Home() {
   return (
     <div className="home">
       <header className="home-header">
-        <span className="home-logo">CryptoAlert</span>
+        <span className="brand">
+          <span className="brand-mark" aria-hidden="true">
+            <Activity size={16} strokeWidth={2.4} />
+          </span>
+          <span className="brand-name">CryptoAlert</span>
+        </span>
         <nav className="home-nav">
           <Link to="/login" className="home-nav-login">Sign in</Link>
-          <Link to="/register" className="home-nav-register">Get started</Link>
+          <Link to="/register" className="home-nav-register">
+            Get started
+            <ArrowRight size={15} strokeWidth={2.2} />
+          </Link>
         </nav>
       </header>
 
@@ -80,7 +114,7 @@ function Home() {
                 <span className={`home-ticker-change ${coin.positive ? 'is-positive' : 'is-negative'}`}>
                   {coin.change}
                 </span>
-                <span className="home-ticker-sep" aria-hidden="true">·</span>
+                <span className="home-ticker-sep" aria-hidden="true" />
               </span>
             ))}
           </div>
@@ -89,7 +123,6 @@ function Home() {
 
       <main className="home-main">
         <section className="home-hero" aria-labelledby="hero-headline">
-
           {/* CSS candlestick chart — pure CSS, no images */}
           <div className="home-hero-visual" aria-hidden="true">
             <div className="hv-glow" />
@@ -123,7 +156,8 @@ function Home() {
               Receive email notifications the moment your thresholds are crossed.
             </p>
             <Link to="/register" className="home-cta home-anim-cta">
-              Get started →
+              Get started
+              <ArrowRight size={16} strokeWidth={2.2} />
             </Link>
           </div>
         </section>
@@ -136,8 +170,14 @@ function Home() {
               style={{ '--reveal-delay': `${i * 0.1}s` }}
             >
               <span className="home-stat-value">
-                {stat.value}
-                {stat.unit && <span className="home-stat-unit">{stat.unit}</span>}
+                {stat.icon ? (
+                  <stat.icon size={36} strokeWidth={2} aria-hidden="true" />
+                ) : (
+                  <>
+                    {stat.value}
+                    {stat.unit && <span className="home-stat-unit">{stat.unit}</span>}
+                  </>
+                )}
               </span>
               <span className="home-stat-label">{stat.label}</span>
             </div>
@@ -147,51 +187,28 @@ function Home() {
         <section className="home-features" aria-labelledby="features-label">
           <p className="home-features-label reveal" id="features-label">Core features</p>
           <div className="home-features-grid">
-            <article className="home-feature-card reveal" style={{ '--reveal-delay': '0.05s' }}>
-              <svg className="home-feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <rect x="3" y="3" width="18" height="18" stroke="currentColor" strokeWidth="1" />
-                <polyline points="5,16 9,10 13,13 19,7" stroke="currentColor" strokeWidth="1" fill="none" />
-                <circle cx="19" cy="7" r="1.5" fill="currentColor" />
-              </svg>
-              <h3>Live Price Tracking</h3>
-              <p>
-                Top 100 crypto markets pulled from CoinGecko every 30 seconds.
-                Filter by name, symbol, or CoinGecko ID.
-              </p>
-            </article>
-
-            <article className="home-feature-card reveal" style={{ '--reveal-delay': '0.15s' }}>
-              <svg className="home-feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <polygon points="12,3 22,20 2,20" stroke="currentColor" strokeWidth="1" fill="none" />
-                <line x1="12" y1="9" x2="12" y2="14" stroke="currentColor" strokeWidth="1" />
-                <circle cx="12" cy="17" r="0.8" fill="currentColor" />
-              </svg>
-              <h3>Smart Alert Rules</h3>
-              <p>
-                Set <code>price_above</code>, <code>price_below</code>, <code>change_above</code>,
-                or <code>change_below</code> conditions. Alerts fire once and log automatically.
-              </p>
-            </article>
-
-            <article className="home-feature-card reveal" style={{ '--reveal-delay': '0.25s' }}>
-              <svg className="home-feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <rect x="4" y="4" width="16" height="16" stroke="currentColor" strokeWidth="1" />
-                <line x1="4" y1="9" x2="20" y2="9" stroke="currentColor" strokeWidth="1" />
-                <line x1="4" y1="14" x2="20" y2="14" stroke="currentColor" strokeWidth="1" />
-                <line x1="9" y1="4" x2="9" y2="20" stroke="currentColor" strokeWidth="1" />
-              </svg>
-              <h3>Alert History</h3>
-              <p>
-                Every triggered alert is logged with the exact price, threshold,
-                24h change, and timestamp for full auditability.
-              </p>
-            </article>
+            {FEATURES.map((feature, i) => (
+              <article
+                key={feature.title}
+                className="home-feature-card reveal"
+                style={{ '--reveal-delay': `${0.05 + i * 0.1}s` }}
+              >
+                <span className="home-feature-icon" aria-hidden="true">
+                  <feature.icon size={22} strokeWidth={1.8} />
+                </span>
+                <h3>{feature.title}</h3>
+                <p>{feature.body}</p>
+              </article>
+            ))}
           </div>
         </section>
       </main>
 
       <footer className="home-footer">
-        <p>© 2026 CryptoAlert</p>
+        <p>
+          <Copyright size={13} strokeWidth={2} aria-hidden="true" />
+          2026 CryptoAlert
+        </p>
       </footer>
     </div>
   )

@@ -1,21 +1,33 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import {
+  AlertCircle,
+  ArrowDownNarrowWide,
+  ArrowUpNarrowWide,
+  BellPlus,
+  Percent,
+  Trash2,
+} from 'lucide-react'
 import api from '../api'
-import SignOutButton from '../components/SignOutButton'
+import PageHeader from '../components/PageHeader'
 
 const CONDITIONS = [
-  { value: 'price_above', label: 'Price above' },
-  { value: 'price_below', label: 'Price below' },
-  { value: 'change_above', label: '24h change above' },
-  { value: 'change_below', label: '24h change below' },
+  { value: 'price_above', label: 'Price above', Icon: ArrowUpNarrowWide },
+  { value: 'price_below', label: 'Price below', Icon: ArrowDownNarrowWide },
+  { value: 'change_above', label: '24h change above', Icon: Percent },
+  { value: 'change_below', label: '24h change below', Icon: Percent },
 ]
 
 const numberFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 8,
 })
 
+function getCondition(value) {
+  return CONDITIONS.find((condition) => condition.value === value)
+}
+
 function formatCondition(value) {
-  return CONDITIONS.find((condition) => condition.value === value)?.label || value
+  return getCondition(value)?.label || value
 }
 
 function parseThreshold(value, isChangeCondition) {
@@ -209,41 +221,30 @@ function Alerts() {
     }
   }
 
-  function handleSignOut() {
-    localStorage.removeItem('crypto_alert_token')
-    navigate('/login', { replace: true })
-  }
+  const hasCoins = coinOptions.length > 0
 
   return (
-    <main className="dashboard-shell">
-      <section className="market-dashboard" aria-labelledby="alerts-title">
-        <header className="dashboard-header">
-          <div>
-            <p className="eyebrow">CryptoAlert</p>
-            <h1 id="alerts-title">Alerts</h1>
-            <p>Create price and 24h change rules for coins in your watchlist.</p>
-          </div>
-          <div className="dashboard-actions">
-            <Link className="secondary-button nav-link" to="/dashboard">
-              Dashboard
-            </Link>
-            <Link className="secondary-button nav-link" to="/watchlist">
-              Watchlist
-            </Link>
-            <Link className="secondary-button nav-link" to="/history">
-              History
-            </Link>
-            <SignOutButton onClick={handleSignOut} />
-          </div>
-        </header>
+    <>
+      <PageHeader
+        eyebrow="Automation"
+        title="Alerts"
+        subtitle="Create price and 24h change rules for coins in your watchlist."
+      >
+        <span className="status-pill">
+          <BellPlus size={13} strokeWidth={2} />
+          {alerts.length} rules
+        </span>
+      </PageHeader>
 
-        {error && (
-          <p className="form-error dashboard-error" role="alert">
-            {error}
-          </p>
-        )}
+      {error && (
+        <p className="alert-banner" role="alert">
+          <AlertCircle size={16} strokeWidth={2} />
+          {error}
+        </p>
+      )}
 
-        <form className="alert-form" onSubmit={createAlert}>
+      <section className="panel">
+        <form className="rule-form" onSubmit={createAlert}>
           <div className="form-field">
             <label htmlFor="alert-coin">Coin</label>
             <select
@@ -251,10 +252,10 @@ function Alerts() {
               name="coin_id"
               value={form.coin_id}
               onChange={updateField}
-              disabled={coinOptions.length === 0}
+              disabled={!hasCoins}
               required
             >
-              {coinOptions.length === 0 ? (
+              {!hasCoins ? (
                 <option value="">No watchlist coins</option>
               ) : (
                 coinOptions.map((coin) => (
@@ -290,27 +291,28 @@ function Alerts() {
               name="threshold"
               type="text"
               inputMode="decimal"
-              placeholder={'$72,900.00'}
+              placeholder={isChangeCondition ? '5.00 (%)' : '72,900.00 ($)'}
               value={form.threshold}
               onChange={updateField}
               required
             />
           </div>
 
-          <button type="submit" disabled={isSubmitting || coinOptions.length === 0}>
-            {isSubmitting ? 'Creating alert' : 'Create Alert'}
+          <button type="submit" className="btn btn-primary" disabled={isSubmitting || !hasCoins}>
+            <BellPlus size={16} strokeWidth={2.2} />
+            {isSubmitting ? 'Creating…' : 'Create alert'}
           </button>
         </form>
 
-        <div className="market-table-wrap">
-          <table className="market-table">
+        <div className="table-wrap">
+          <table className="data-table">
             <thead>
               <tr>
                 <th scope="col">Coin</th>
                 <th scope="col">Condition</th>
-                <th scope="col">Threshold</th>
+                <th scope="col" className="col-right">Threshold</th>
                 <th scope="col">Status</th>
-                <th scope="col">Action</th>
+                <th scope="col" className="col-right">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -323,41 +325,57 @@ function Alerts() {
                     <td>
                       <span className="skeleton-line medium" />
                     </td>
-                    <td>
+                    <td className="col-right">
                       <span className="skeleton-line medium" />
                     </td>
                     <td>
                       <span className="skeleton-line short" />
                     </td>
-                    <td>
-                      <span className="skeleton-line medium" />
+                    <td className="col-right">
+                      <span className="skeleton-line short" />
                     </td>
                   </tr>
                 ))
               ) : alerts.length > 0 ? (
-                alerts.map((alert) => (
-                  <tr key={alert.id}>
-                    <td className="numeric-cell">{alert.coin_name}</td>
-                    <td>{formatCondition(alert.condition)}</td>
-                    <td className="numeric-cell">{numberFormatter.format(alert.threshold)}</td>
-                    <td className={alert.is_active ? 'change-positive' : 'change-neutral'}>
-                      {alert.is_active ? 'Active' : 'Triggered'}
-                    </td>
-                    <td>
-                      <button
-                        type="button"
-                        className="table-action remove-action"
-                        disabled={pendingAlertId === alert.id}
-                        onClick={() => deleteAlert(alert.id)}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))
+                alerts.map((alert) => {
+                  const condition = getCondition(alert.condition)
+                  const ConditionIcon = condition?.Icon
+                  return (
+                    <tr key={alert.id}>
+                      <td className="coin-name">{alert.coin_name}</td>
+                      <td>
+                        <span className="condition-cell">
+                          {ConditionIcon && (
+                            <ConditionIcon size={14} strokeWidth={2} aria-hidden="true" />
+                          )}
+                          {formatCondition(alert.condition)}
+                        </span>
+                      </td>
+                      <td className="num col-right">{numberFormatter.format(alert.threshold)}</td>
+                      <td>
+                        <span className={`badge ${alert.is_active ? 'badge-active' : 'badge-muted'}`}>
+                          <span className="badge-dot" aria-hidden="true" />
+                          {alert.is_active ? 'Active' : 'Triggered'}
+                        </span>
+                      </td>
+                      <td className="col-right">
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-danger-ghost"
+                          disabled={pendingAlertId === alert.id}
+                          onClick={() => deleteAlert(alert.id)}
+                        >
+                          <Trash2 size={14} strokeWidth={2} />
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                })
               ) : (
                 <tr>
-                  <td className="empty-table" colSpan="5">
+                  <td className="empty-cell" colSpan="5">
+                    <BellPlus size={22} strokeWidth={1.6} />
                     No alerts created yet.
                   </td>
                 </tr>
@@ -366,7 +384,7 @@ function Alerts() {
           </table>
         </div>
       </section>
-    </main>
+    </>
   )
 }
 

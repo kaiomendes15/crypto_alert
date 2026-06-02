@@ -1,42 +1,130 @@
 :root {
-  --black: #000000;
-  --bg: #050806;
-  --panel: #0b0f0c;
-  --field: #020403;
-  --text: #9fb4a7;
-  --text-strong: #f0fff5;
-  --border: #193823;
+  /* ── Surfaces ─────────────────────────────────────────── */
+  --bg: #05080a;
+  --surface: #0a0f0d;
+  --surface-raised: #0e1411;
+  --surface-hover: #111a15;
+  --field: #060a08;
+
+  /* ── Text ─────────────────────────────────────────────── */
+  --text: #8c9f96;
+  --text-dim: #5d6f67;
+  --text-strong: #ecfff4;
+
+  /* ── Lines ────────────────────────────────────────────── */
+  --border: #15241c;
+  --border-strong: #1f3528;
+
+  /* ── Accent (money green) ─────────────────────────────── */
   --accent: #00e676;
   --accent-strong: #2dff8f;
-  --button-text: #001f0d;
-  --danger: #ff3b30;
+  --accent-soft: rgba(0, 230, 118, 0.12);
+  --accent-line: rgba(0, 230, 118, 0.28);
+  --button-text: #022012;
 
-  font-family: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas,
-    monospace;
+  /* ── Semantic ─────────────────────────────────────────── */
+  --danger: #ff5a52;
+  --danger-soft: rgba(255, 90, 82, 0.12);
+
+  /* ── Spacing scale (4px base) ─────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 56px;
+  --space-10: 72px;
+
+  /* ── Type scale ───────────────────────────────────────── */
+  --fs-xs: 11px;
+  --fs-sm: 12px;
+  --fs-base: 13px;
+  --fs-md: 14px;
+  --fs-lg: 16px;
+  --fs-xl: 20px;
+  --fs-2xl: 26px;
+  --fs-3xl: 36px;
+
+  /* ── Geometry ─────────────────────────────────────────── */
+  --radius: 2px;
+  --radius-lg: 4px;
+  --sidebar-w: 248px;
+  --topbar-h: 68px;
+  --ring: 0 0 0 2px rgba(0, 230, 118, 0.22);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--fs-base);
   color: var(--text);
-  background:
-    linear-gradient(rgba(0, 230, 118, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 230, 118, 0.04) 1px, transparent 1px),
-    var(--bg);
-  background-size: 48px 48px, 48px 48px, auto;
+  background: var(--bg);
+  line-height: 1.55;
   font-synthesis: none;
-  line-height: 1.5;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   min-width: 320px;
   min-height: 100svh;
   margin: 0;
+  background:
+    radial-gradient(120% 90% at 50% -10%, rgba(0, 230, 118, 0.05), transparent 55%),
+    var(--bg);
 }
 
 #root {
   min-height: 100svh;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--text-strong);
+}
+
+/* Thin, on-brand scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border: 3px solid var(--bg);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #2a4736;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
