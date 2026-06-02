@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
 import Alerts from './pages/Alerts'
+import AppLayout from './components/AppLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 import Dashboard from './pages/Dashboard'
 import History from './pages/History'
@@ -16,10 +17,12 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/watchlist" element={<Watchlist />} />
-        <Route path="/alerts" element={<Alerts />} />
-        <Route path="/history" element={<History />} />
+        <Route element={<AppLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/watchlist" element={<Watchlist />} />
+          <Route path="/alerts" element={<Alerts />} />
+          <Route path="/history" element={<History />} />
+        </Route>
       </Route>
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
