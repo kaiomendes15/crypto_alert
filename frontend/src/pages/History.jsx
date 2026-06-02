@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { AlertCircle, ArrowDownRight, ArrowUpRight, History as HistoryIcon, RefreshCw } from 'lucide-react'
 import api from '../api'
-import SignOutButton from '../components/SignOutButton'
+import PageHeader from '../components/PageHeader'
 
 const POLL_INTERVAL_MS = 30000
 
@@ -20,10 +21,20 @@ function formatCondition(value) {
 
 function formatChange(value) {
   if (value === null || value === undefined) {
-    return 'Unavailable'
+    return '—'
   }
 
   return `${value > 0 ? '+' : ''}${numberFormatter.format(value)}%`
+}
+
+function changeMeta(value) {
+  if (value === null || value === undefined) {
+    return { className: 'change-neutral', Icon: null }
+  }
+
+  return value >= 0
+    ? { className: 'change-positive', Icon: ArrowUpRight }
+    : { className: 'change-negative', Icon: ArrowDownRight }
 }
 
 function History() {
@@ -79,50 +90,37 @@ function History() {
     }
   }, [navigate])
 
-  function handleSignOut() {
-    localStorage.removeItem('crypto_alert_token')
-    navigate('/login', { replace: true })
-  }
-
   return (
-    <main className="dashboard-shell">
-      <section className="market-dashboard" aria-labelledby="history-title">
-        <header className="dashboard-header">
-          <div>
-            <p className="eyebrow">CryptoAlert</p>
-            <h1 id="history-title">Alert history</h1>
-            <p>Triggered alerts are listed newest first and refresh every 30 seconds.</p>
-          </div>
-          <div className="dashboard-actions">
-            <span className={isRefreshing ? 'refresh-status is-active' : 'refresh-status'}>
-              {isRefreshing ? 'Refreshing' : 'Polling every 30s'}
-            </span>
-            <Link className="secondary-button nav-link" to="/dashboard">
-              Dashboard
-            </Link>
-            <Link className="secondary-button nav-link" to="/alerts">
-              Alerts
-            </Link>
-            <SignOutButton onClick={handleSignOut} />
-          </div>
-        </header>
+    <>
+      <PageHeader
+        eyebrow="Audit log"
+        title="Alert history"
+        subtitle="Triggered alerts are listed newest first and refresh every 30 seconds."
+      >
+        <span className={`status-pill ${isRefreshing ? 'is-active' : ''}`}>
+          <RefreshCw size={13} strokeWidth={2} className={isRefreshing ? 'spin' : ''} />
+          {isRefreshing ? 'Refreshing' : 'Live · 30s'}
+        </span>
+      </PageHeader>
 
-        {error && (
-          <p className="form-error dashboard-error" role="alert">
-            {error}
-          </p>
-        )}
+      {error && (
+        <p className="alert-banner" role="alert">
+          <AlertCircle size={16} strokeWidth={2} />
+          {error}
+        </p>
+      )}
 
-        <div className="market-table-wrap">
-          <table className="market-table">
+      <section className="panel">
+        <div className="table-wrap">
+          <table className="data-table">
             <thead>
               <tr>
                 <th scope="col">Coin</th>
                 <th scope="col">Condition</th>
-                <th scope="col">Threshold</th>
-                <th scope="col">Triggered price</th>
-                <th scope="col">24h change</th>
-                <th scope="col">Date</th>
+                <th scope="col" className="col-right">Threshold</th>
+                <th scope="col" className="col-right">Triggered price</th>
+                <th scope="col" className="col-right">24h change</th>
+                <th scope="col" className="col-right">Date</th>
               </tr>
             </thead>
             <tbody>
@@ -135,36 +133,49 @@ function History() {
                     <td>
                       <span className="skeleton-line medium" />
                     </td>
-                    <td>
+                    <td className="col-right">
                       <span className="skeleton-line medium" />
                     </td>
-                    <td>
+                    <td className="col-right">
                       <span className="skeleton-line medium" />
                     </td>
-                    <td>
+                    <td className="col-right">
                       <span className="skeleton-line short" />
                     </td>
-                    <td>
+                    <td className="col-right">
                       <span className="skeleton-line wide" />
                     </td>
                   </tr>
                 ))
               ) : history.length > 0 ? (
-                history.map((item) => (
-                  <tr key={item.id}>
-                    <td className="numeric-cell">{item.coin_name}</td>
-                    <td>{formatCondition(item.condition)}</td>
-                    <td className="numeric-cell">{numberFormatter.format(item.threshold)}</td>
-                    <td className="numeric-cell">
-                      {numberFormatter.format(item.price_at_trigger)}
-                    </td>
-                    <td className="numeric-cell">{formatChange(item.change_24h)}</td>
-                    <td>{dateFormatter.format(new Date(item.triggered_at))}</td>
-                  </tr>
-                ))
+                history.map((item) => {
+                  const { className, Icon } = changeMeta(item.change_24h)
+                  return (
+                    <tr key={item.id}>
+                      <td className="coin-name">{item.coin_name}</td>
+                      <td>
+                        <span className="condition-cell">{formatCondition(item.condition)}</span>
+                      </td>
+                      <td className="num col-right">{numberFormatter.format(item.threshold)}</td>
+                      <td className="num col-right">
+                        {numberFormatter.format(item.price_at_trigger)}
+                      </td>
+                      <td className={`num col-right ${className}`}>
+                        <span className="change-cell">
+                          {Icon && <Icon size={14} strokeWidth={2.2} aria-hidden="true" />}
+                          {formatChange(item.change_24h)}
+                        </span>
+                      </td>
+                      <td className="col-right text-dim">
+                        {dateFormatter.format(new Date(item.triggered_at))}
+                      </td>
+                    </tr>
+                  )
+                })
               ) : (
                 <tr>
-                  <td className="empty-table" colSpan="6">
+                  <td className="empty-cell" colSpan="6">
+                    <HistoryIcon size={22} strokeWidth={1.6} />
                     No triggered alerts yet.
                   </td>
                 </tr>
@@ -173,7 +184,7 @@ function History() {
           </table>
         </div>
       </section>
-    </main>
+    </>
   )
 }
 
