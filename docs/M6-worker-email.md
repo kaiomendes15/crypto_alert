@@ -10,7 +10,7 @@ Standalone Python process subscribes to RabbitMQ and sends a transactional email
 
 ## Acceptance Criteria
 
-- [x] Worker starts with `python -m worker.main` and logs `"Waiting for messages on queue: price_alerts"`
+- [x] Worker starts with `python -m worker.main` and logs `"Waiting for messages on queue: price_alerts_queue"`
 - [x] On each message: parses JSON, calls `resend.Emails.send(...)` with HTML body (coin name, condition, threshold, triggered price, timestamp)
 - [x] Acks on success; nacks with `requeue=False` on failure
 - [x] Email arrives in the test inbox during local demo
@@ -46,3 +46,4 @@ Body (HTML):
 Deployed as a **separate Render Background Worker** service (not part of the API service):
 - Start command: `python -m worker.main`
 - Same env vars as API: `RABBITMQ_URL`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`
+- On Render, this must be provisioned as a Background Worker service. A deployed API will only publish messages; it will not consume `price_alerts_queue`.

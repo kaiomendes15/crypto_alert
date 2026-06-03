@@ -2,7 +2,7 @@ services:
   - type: web
     name: crypto-alert-frontend
     runtime: static
-    branch: test/deploy
+    branch: main
     buildCommand: cd frontend && npm ci && npm run build
     staticPublishPath: frontend/dist
     routes:
@@ -16,7 +16,7 @@ services:
   - type: web
     name: crypto-alert-api
     runtime: python
-    branch: test/deploy
+    branch: main
     plan: free
     buildCommand: pip install -r backend/requirements.txt
     startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
@@ -51,7 +51,7 @@ services:
   - type: worker
     name: crypto-alert-worker
     runtime: python
-    branch: test/deploy
+    branch: main
     plan: starter
     buildCommand: pip install -r backend/requirements.txt
     startCommand: cd backend && python -m worker.main
