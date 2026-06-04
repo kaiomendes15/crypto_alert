@@ -50,8 +50,14 @@ async def get_markets(ids: Optional[str] = None) -> list[CoinMarket]:
     if ids:
         params["ids"] = cache_key  # use normalised form for consistent API calls
 
+    headers = (
+        {"x-cg-demo-api-key": settings.coingecko_api_key} if settings.coingecko_api_key else None
+    )
+
     async with httpx.AsyncClient(timeout=10.0) as client:
-        response = await client.get(f"{settings.coingecko_base_url}/coins/markets", params=params)
+        response = await client.get(
+            f"{settings.coingecko_base_url}/coins/markets", params=params, headers=headers
+        )
 
     if response.status_code == 429:
         raise httpx.HTTPStatusError("rate limited", request=response.request, response=response)

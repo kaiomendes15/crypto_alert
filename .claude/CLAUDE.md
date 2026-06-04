@@ -99,6 +99,7 @@ Full details for each milestone live in `docs/M<N>-*.md`. Update the Status colu
 | M11 | Frontend alerts + history pages | Person C | May 31 | M8, M7 | M14 | — | ✅ Done |
 | M13 | Deploy API + Worker to Render | Person A | June 1 | All backend + M12 | M14 | — | ⬜ Pending |
 | M14 | Deploy frontend to Vercel + smoke test | Person B | June 1 | M13, M8–M11 | — | — | ⬜ Pending |
+| M15 | CoinGecko API key (Demo tier) — eliminar 429s no Render | Person A | June 3 | M3 | — | — | 🟡 Partial (código + testes done; Render env var e verificação em prod pendentes) |
 
 ### Dependency Graph
 
@@ -151,6 +152,7 @@ JWT_SECRET=change-me-in-production
 JWT_ALGORITHM=HS256
 POLL_INTERVAL_SECONDS=120
 COINGECKO_BASE_URL=https://api.coingecko.com/api/v3
+COINGECKO_API_KEY=                        # CoinGecko Demo plan key — elimina 429s no Render
 
 # frontend/.env
 VITE_API_URL=http://localhost:8000
@@ -286,4 +288,8 @@ GET /coins/markets
   &price_change_percentage=24h
 ```
 
-Rate limit: ~10–30 req/min. No API key. On 429: back off 60s, return 503 to client.
+Rate limit sem chave: ~10–30 req/min por IP (problemático no Render — IP classificado como datacenter).
+Rate limit com chave Demo: definido pela chave, não pelo IP — resolve os 429s em produção.
+
+Header para plano Demo: `x-cg-demo-api-key: <key>` (endpoint base não muda).
+On 429: back off 60s, return 503 to client.
