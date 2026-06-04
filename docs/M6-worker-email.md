@@ -1,17 +1,17 @@
-# M6 — RabbitMQ Worker + Resend Email
+# M6 — RabbitMQ Worker + Brevo Email
 
 **Day**: May 30 | **Owner**: Person C | **Blocks**: M11, M13 | **Blocked by**: M12
 
 ## Goal
 
-Standalone Python process subscribes to RabbitMQ and sends a transactional email via Resend for every triggered alert message.
+Standalone Python process subscribes to RabbitMQ and sends a transactional email via Brevo for every triggered alert message.
 
 **Integration Technique 3 — Pub/Sub**: the worker is a subscriber that reacts to alert events without knowing who published them. Deployed as a separate Render Background Worker service.
 
 ## Acceptance Criteria
 
 - [x] Worker starts with `python -m worker.main` and logs `"Waiting for messages on queue: price_alerts_queue"`
-- [x] On each message: parses JSON, calls `resend.Emails.send(...)` with HTML body (coin name, condition, threshold, triggered price, timestamp)
+- [x] On each message: parses JSON, calls Brevo's transactional email API with HTML body (coin name, condition, threshold, triggered price, timestamp)
 - [x] Acks on success; nacks with `requeue=False` on failure
 - [x] Email arrives in the test inbox during local demo
 
@@ -20,7 +20,7 @@ Standalone Python process subscribes to RabbitMQ and sends a transactional email
 ```
 backend/worker/
 ├── __init__.py
-└── main.py    # aio-pika consumer + Resend send
+└── main.py    # aio-pika consumer + Brevo send
 ```
 
 ## RabbitMQ Topology
@@ -45,5 +45,5 @@ Body (HTML):
 
 Deployed as a **separate Render Background Worker** service (not part of the API service):
 - Start command: `python -m worker.main`
-- Same env vars as API: `RABBITMQ_URL`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`
+- Required env vars: `RABBITMQ_URL`, `BREVO_API_KEY`, `BREVO_FROM_EMAIL`, `BREVO_FROM_NAME`
 - On Render, this must be provisioned as a Background Worker service. A deployed API will only publish messages; it will not consume `price_alerts_queue`.

@@ -1,12 +1,15 @@
 import asyncio
 import logging
+import smtplib
 import sys
 import uuid
+from email.message import EmailMessage
+from email.utils import formataddr, parseaddr
 from typing import Any
 
 import aio_pika
+import httpx
 import json
-import resend
 from aio_pika import ExchangeType
 from sqlalchemy import update
 
@@ -20,8 +23,6 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s",
 )
 logger = logging.getLogger(__name__)
-
-resend.api_key = settings.resend_api_key
 
 CONDITION_LABELS = {
     "price_above": "rose above",
@@ -102,6 +103,62 @@ def _build_email(data: dict[str, Any]) -> tuple[str, str]:
     return subject, html
 
 
+def _brevo_sender() -> dict[str, str]:
+    parsed_name, parsed_email = parseaddr(settings.brevo_from_email)
+    sender_email = parsed_email or settings.brevo_from_email
+    sender_name = settings.brevo_from_name or parsed_name or "CryptoAlert"
+    return {"name": sender_name, "email": sender_email}
+
+
+def _sender_header() -> str:
+    sender = _brevo_sender()
+    return formataddr((sender["name"], sender["email"]))
+
+
+async def _send_email_via_api(user_email: str, subject: str, html: str) -> None:
+    payload = {
+        "sender": _brevo_sender(),
+        "to": [{"email": user_email}],
+        "subject": subject,
+        "htmlContent": html,
+    }
+    headers = {
+        "accept": "application/json",
+        "api-key": settings.brevo_api_key,
+        "content-type": "application/json",
+    }
+
+    async with httpx.AsyncClient(timeout=20) as client:
+        response = await client.post(settings.brevo_api_url, headers=headers, json=payload)
+
+    if response.is_error:
+        raise RuntimeError(
+            f"Brevo returned HTTP {response.status_code}: {response.text[:500]}"
+        )
+
+
+def _send_email_via_smtp_sync(user_email: str, subject: str, html: str) -> None:
+    message = EmailMessage()
+    message["From"] = _sender_header()
+    message["To"] = user_email
+    message["Subject"] = subject
+    message.set_content("CryptoAlert notification. Open this email in an HTML-capable client.")
+    message.add_alternative(html, subtype="html")
+
+    with smtplib.SMTP(settings.brevo_smtp_host, settings.brevo_smtp_port, timeout=20) as smtp:
+        smtp.starttls()
+        smtp.login(settings.brevo_smtp_login, settings.brevo_smtp_password)
+        smtp.send_message(message)
+
+
+async def _send_email(user_email: str, subject: str, html: str) -> None:
+    if settings.email_provider == "brevo_smtp":
+        await asyncio.to_thread(_send_email_via_smtp_sync, user_email, subject, html)
+        return
+
+    await _send_email_via_api(user_email, subject, html)
+
+
 async def _mark_email_sent(history_id: str) -> None:
     """Best-effort flag flip after a successful send. The email already went out, so a
     failure here is logged but never re-sends or re-queues the message."""
@@ -137,19 +194,9 @@ async def _process_message(message: aio_pika.IncomingMessage) -> None:
     subject, html = _build_email(data)
 
     try:
-        # resend.Emails.send is a blocking HTTP call; run it off the event loop so it
-        # cannot stall aio-pika heartbeats (a stalled heartbeat drops the connection).
-        await asyncio.to_thread(
-            resend.Emails.send,
-            {
-                "from": settings.resend_from_email,
-                "to": [user_email],
-                "subject": subject,
-                "html": html,
-            },
-        )
+        await _send_email(user_email, subject, html)
     except Exception as exc:
-        logger.error("Resend error for alert %s: %s", alert_id, exc)
+        logger.error("Brevo error for alert %s: %s", alert_id, exc)
         await message.nack(requeue=False)
         return
 
@@ -166,8 +213,15 @@ async def main() -> None:
     if not settings.rabbitmq_url:
         logger.error("RABBITMQ_URL is not configured; worker cannot start")
         sys.exit(1)
-    if not settings.resend_api_key or not settings.resend_from_email:
-        logger.error("RESEND_API_KEY / RESEND_FROM_EMAIL not configured; worker cannot start")
+    if not settings.brevo_from_email:
+        logger.error("BREVO_FROM_EMAIL is not configured; worker cannot start")
+        sys.exit(1)
+    if settings.email_provider == "brevo_smtp":
+        if not settings.brevo_smtp_login or not settings.brevo_smtp_password:
+            logger.error("BREVO_SMTP_LOGIN / BREVO_SMTP_PASSWORD not configured; worker cannot start")
+            sys.exit(1)
+    elif not settings.brevo_api_key:
+        logger.error("BREVO_API_KEY is not configured; worker cannot start")
         sys.exit(1)
 
     logger.info("Connecting to RabbitMQ...")

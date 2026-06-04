@@ -43,8 +43,9 @@ crypto_alert/
 ```bash
 DATABASE_URL=postgresql+asyncpg://cryptoalert:cryptoalert@localhost:5432/cryptoalert
 RABBITMQ_URL=amqp://user:pass@host:5672/vhost
-RESEND_API_KEY=re_...
-RESEND_FROM_EMAIL=alerts@yourdomain.com
+BREVO_API_KEY=xkeysib-...
+BREVO_FROM_EMAIL=your-verified-sender@example.com
+BREVO_FROM_NAME=CryptoAlert
 JWT_SECRET=change-me-in-production
 JWT_ALGORITHM=HS256
 POLL_INTERVAL_SECONDS=120

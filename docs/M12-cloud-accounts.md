@@ -10,7 +10,7 @@ All four external services provisioned and credentials stored in `.env` locally,
 
 - [x] **CloudAMQP** — "Little Lemur" free instance created → `RABBITMQ_URL` in `.env`
 - [ ] **Render Postgres** — free DB created → `DATABASE_URL` (asyncpg format) in `.env` _(still pointing at local Docker Postgres)_
-- [ ] **Resend** — account created, sending domain verified, API key → `RESEND_API_KEY` + `RESEND_FROM_EMAIL` in `.env` _(account + API key done; sending domain NOT verified — using sandbox `onboarding@resend.dev`, which only delivers to the account owner)_
+- [ ] **Brevo** — account created, sender verified, API key → `BREVO_API_KEY` + `BREVO_FROM_EMAIL` in `.env`
 - [ ] **Vercel** — project created, linked to repo, Root Directory set to `frontend/`
 - [x] `.env.example` committed listing all required keys (no values)
 
@@ -20,10 +20,10 @@ All four external services provisioned and credentials stored in `.env` locally,
 |---|---|---|
 | CloudAMQP | Little Lemur | AMQP URL (copy from dashboard) |
 | Render | Free Postgres | Internal DB URL (copy from dashboard) |
-| Resend | Free tier | API key + verified sender domain |
+| Brevo | Free tier | API key + verified sender email or authenticated domain |
 | Vercel | Hobby | GitHub integration |
 
 ## Notes
 
 - Render's free Postgres URL uses `postgresql://` — change to `postgresql+asyncpg://` for SQLAlchemy
-- Resend requires a verified domain to send email; use a shared team email domain or a free subdomain
+- Brevo can start with a verified sender email for demos; authenticate a domain later for better deliverability

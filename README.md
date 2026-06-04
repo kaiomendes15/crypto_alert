@@ -39,11 +39,11 @@ Frontend runs on http://localhost:5173
 ## Stack
 - **Backend**: Python 3.12 + FastAPI + SQLAlchemy async + PostgreSQL 16
 - **Queue**: RabbitMQ via CloudAMQP + aio-pika
-- **Email**: Resend
+- **Email**: Brevo Transactional Email API
 - **Frontend**: React 18 (Vite) + React Router + Axios
 - **Deploy**: Render (API + Worker + DB) · Vercel (frontend) · CloudAMQP
 
 ## Integration Techniques
 1. **REST**: Backend proxies CoinGecko API; frontend consumes our REST API
 2. **Messaging**: Scheduler publishes triggered alerts to RabbitMQ queue
-3. **Pub/Sub**: Worker subscribes to queue and delivers email via Resend
+3. **Pub/Sub**: Worker subscribes to queue and delivers email via Brevo
