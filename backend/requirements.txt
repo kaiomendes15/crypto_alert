@@ -8,7 +8,5 @@ pyjwt
 bcrypt
 httpx
 aio-pika
-resend
 python-dotenv
 apscheduler
-aio_pika

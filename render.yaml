@@ -35,10 +35,6 @@ services:
         value: https?://.*
       - key: RABBITMQ_URL
         sync: false
-      - key: RESEND_API_KEY
-        sync: false
-      - key: RESEND_FROM_EMAIL
-        sync: false
       - key: JWT_SECRET
         sync: false
       - key: JWT_ALGORITHM
@@ -62,10 +58,14 @@ services:
           property: connectionString
       - key: RABBITMQ_URL
         sync: false
-      - key: RESEND_API_KEY
+      - key: EMAIL_PROVIDER
+        value: brevo_api
+      - key: BREVO_API_KEY
         sync: false
-      - key: RESEND_FROM_EMAIL
+      - key: BREVO_FROM_EMAIL
         sync: false
+      - key: BREVO_FROM_NAME
+        value: CryptoAlert
       - key: JWT_SECRET
         sync: false
       - key: JWT_ALGORITHM

@@ -38,22 +38,48 @@ The repository already contains a worker implementation at `backend/worker/main.
 | Branch | `main` |
 | Instance type | `starter` or another paid worker-capable instance |
 
-### Env Vars (set on both services)
+### Env Vars
+
+Set these on the API and worker:
 
 ```
 DATABASE_URL       postgresql+asyncpg://...  (Render Postgres internal URL)
 RABBITMQ_URL       amqps://...               (CloudAMQP URL)
-RESEND_API_KEY     re_...
-RESEND_FROM_EMAIL  alerts@yourdomain.com
 JWT_SECRET         <strong random string>
 JWT_ALGORITHM      HS256
+```
+
+Set these on the API only:
+
+```
 POLL_INTERVAL_SECONDS  120
 COINGECKO_BASE_URL https://api.coingecko.com/api/v3
 ```
 
-The worker requires `DATABASE_URL`, `RABBITMQ_URL`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `JWT_SECRET`, and `JWT_ALGORITHM`. `POLL_INTERVAL_SECONDS` and `COINGECKO_BASE_URL` are used by the API scheduler, not by the worker.
+Set these on the worker only:
 
-`RESEND_FROM_EMAIL` must use a verified domain, for example `alerts@alerts.yourdomain.com`. The default Resend testing domain (`resend.dev`, including `onboarding@resend.dev`) can only send to the Resend account owner's email address.
+```
+EMAIL_PROVIDER    brevo_api
+BREVO_API_KEY     xkeysib-...
+BREVO_FROM_EMAIL  your-verified-sender@example.com
+BREVO_FROM_NAME   CryptoAlert
+```
+
+For a locally-run worker using Brevo SMTP instead of the API key:
+
+```
+EMAIL_PROVIDER       brevo_smtp
+BREVO_FROM_EMAIL     your-verified-sender@example.com
+BREVO_FROM_NAME      CryptoAlert
+BREVO_SMTP_HOST      smtp-relay.brevo.com
+BREVO_SMTP_PORT      587
+BREVO_SMTP_LOGIN     your-smtp-login@smtp-brevo.com
+BREVO_SMTP_PASSWORD  your-smtp-password
+```
+
+The worker requires `DATABASE_URL`, `RABBITMQ_URL`, `BREVO_FROM_EMAIL`, `JWT_SECRET`, and `JWT_ALGORITHM`. With `EMAIL_PROVIDER=brevo_api`, it also requires `BREVO_API_KEY`. With `EMAIL_PROVIDER=brevo_smtp`, it requires `BREVO_SMTP_LOGIN` and `BREVO_SMTP_PASSWORD`. `POLL_INTERVAL_SECONDS` and `COINGECKO_BASE_URL` are used by the API scheduler, not by the worker.
+
+`BREVO_FROM_EMAIL` must be a sender verified in Brevo. For a demo without a custom domain, verify a sender email address in Brevo. For better deliverability, authenticate a domain later.
 
 ## Deploy Order
 
